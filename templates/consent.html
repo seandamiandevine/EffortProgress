@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+  The consent.html displays the text of your IRB-approved
+  consent form.  Even if you are not required to provide
+  a consent form, it is helpful to use this form to
+  describe what people can do if an error comes up, etc...
+
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Informed Consent Form</title>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+        <link rel="icon" href="/static/favicon.ico" />
+        <script type="text/javascript">
+            function onexit() {
+              self.close(); // no harm, no foul here
+            }
+        </script>
+		<style>
+			@media print {
+				body * {
+					visibility: hidden;
+				}
+				.legal, .legal * {
+					visibility: visible;
+				}
+				.legal {
+					position: absolute;
+					left: 0;
+					top: 0;
+					overflow:visible;
+				}
+			}
+		</style>
+    </head>
+    <body>
+        <div id="container-consent">
+            <div id="consent">
+                <h1>Informed Consent</h1>
+                <hr />
+                <div class="legal well">
+                  <h2><b>Study title:</b>Cognitive effort and decision-making</h2>
+                   <h3><b>STUDY PURPOSE</b></h3>
+                   <p>
+                    The purpose of this study is to better understand how we make decisions about stimuli we see.
+                    In this experiment, you will complete different versions of a task and be required to make responses about which version of the task you prefer.
+                   </p>
+                  <h3><b>Foreseeable risks or discomforts</b></h3>
+                  <p>
+                   The risks and discomforts associated with this study are minimal.
+                 </p>
+                 <h3><b>CONFIDENTIALITY</b></h3>
+                 <p>
+                   All information related to personal identity will remain confidential and all answers will be stored on a protected computer server.
+                   Once a participant has been compensated, their mTurk account number will be stripped from the dataset.
+                   At this point, the researcher will have no way to link an mTurk account number to the participant identity.
+                   Withdrawal from the study will not be possible after this point.
+                   Results will be disseminated at conferences and journals only as group ratings.
+                 </p>
+                 <h3><b>COMPENSATION</b></h3>
+                 <p>
+                   If you choose to participate in the study, it will take about 35 minutes to complete, you will be compensated $2 through your MTurk account.
+                   <br><br>
+                   <b>**Your participation in this study is completely voluntary.**</b>
+                   <br><br>
+                   You can refuse to make a response, at any time, can quit the study without any penalty.
+                 </p>
+                   <h3><b>CONTACT INFORMATION</b></h3>
+                   <p>
+                    If you have any questions or comments about this research, you may contact Dr. Ross Otto, Department of Psychology at McGill University at rotto@psych.mcgill.ca.
+                    If you have any questions or concerns regarding your rights or welfare as a participant in this research study, please contact the McGill Ethics Officer at 1-514-398-6831or lynda.mcneil@mcgill.ca
+                 </p>
+
+                  <p>
+                      I have read and understand this form and consent to the research as it is described to me.
+                      If you consent to participate, please click "I agree" below.
+                 </p>
+                    <button type="button" class="btn btn-default btn-sm" onClick="window.print();">
+                    <span class="glyphicon glyphicon-print"></span> Print a copy of this
+                    </button>
+                </div>
+
+                <hr />
+                <h4>Do you understand and consent to these terms?</h4>
+                <br />
+
+                <center>
+                    <button type="button" class="btn btn-primary btn-lg" onClick="window.location='/exp?hitId={{ hitid }}&assignmentId={{ assignmentid }}&workerId={{ workerid }}'">
+                    <span class="glyphicon glyphicon-ok"></span> I agree
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger btn-lg" onClick="onexit()">
+                    <span class="glyphicon glyphicon-ban-circle"></span> No thanks, I do not want to do this HIT
+                    </button>
+                </center>
+
+            </div>
+        </div>
+    </body>
+</html>
