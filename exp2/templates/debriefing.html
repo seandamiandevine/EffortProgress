@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+
+<html>
+<head>
+        <meta charset="utf-8" />
+	<title>Debriefing</title>
+	<link rel="stylesheet" href="/static/css/task.css" type="text/css" media="screen" />
+</head>
+<body>
+	<div id="debriefing">
+		<h1>Debriefing</h1>
+
+		<div id="debriefingtext">
+		<p>Thank you for your participation in our study!  Your anonymous data makes an
+		important contribution to our understanding of cognitive effort. </p>
+
+		<p>The purpose of this study was to invesigate how progress contributes to
+       how people view cognitive effort. Cognitive effort is usually thought of as
+       the amount of mental energy needed to accomplish some task. Generally speaking,
+       effort is usually thought of as aversive -- people tend to avoid spending it in most
+       day-to-day tasks. However, we still use effort all the time because it usually confers some benefit.
+       For example, we may spend a lot of mental effort studying for an exam, because doing so will secure us
+      a good grade. </p>
+
+    <p> That being said, there are some situations where people think of effort a bit differently. For instance,
+    when someone plays Sodoku, they do so because effort <i>itself</i>is rewarding, <b>not</b> necessarily because
+    it gets them any particular reward. </p>
+
+    <p>In this study, we hypothesized that one of the reasons for this difference is <b>progress</b>. Depending on the
+    version of the study you are randomly assigned to, you either completed the tasks with a progress bar present or not.
+    When you chose a portal, you were really choosing between two versions of the main task: a hard one and an easy one.
+    We hypothesized that when the progress bar was present, people would choose the harder task more often than when it was not,
+    suggesting that they were more willing to engage in more mental effort when progress was present (like when people play Sodoku).</p>
+
+		<p>If you have any questions about this research, you may contact the
+		principal investigator, Sean Devine (seandamiandevine@gmail.com).</p>
+		</div>
+
+			<p class="cool">Do you agree to the following statement?</p>
+			<div id="affirmationbox">
+				<p>I feel that I have been adequately debriefed about the nature
+					of the study.  The investigator has explained the purposes of the
+					research to me, and I feel that any questions I have asked were
+					satisfactorily answered.</p>
+					<table><tr>
+						<td id="affirmative" onClick="javascript:document.forms['accept'].submit()">Yes, I agree.</td>
+						<td id="negative" onClick="javascript:document.forms['decline'].submit()">No, please withhold my data. I will contact the experimenter with questions.</td>
+					</tr></table>
+					<form id="accept" action="complete" method="post">
+						<input type="hidden" name="uniqueid" value="{{ uniqueId }}" />
+						<input type="hidden" name="agree" value="true" />
+					</form>
+					<form id="decline" action="complete" method="post">
+						<input type="hidden" name="uniqueid" value="{{ uniqueId }}" />
+						<input type="hidden" name="agree" value="false" />
+					</form>
+			</div>
+	</div>
+</body>
+
+</html>
