@@ -4,10 +4,10 @@
 load('/home/sdevine/Desktop/Ongoing/EffortProg/Exp1/Analysis/Exp1.RData')
 
 # Switch costs -------------------------------------------------------------
-pdf('baser_plots/switchcosts.pdf', width = 6, height = 6.5)
-#X11( width = 6, height = 6)
+png('baser_plots/switchcosts.png', width = 6, height = 8, units='in', res=300)
+#X11( width = 6, height = 8)
 layout(matrix(1:4, 2, 2, byrow = T))
-par('mar' = c(5, 4, 3, 2))
+# par('mar' = c(5, 4, 3, 2))
 
 # per block
 # rt
@@ -33,6 +33,9 @@ points(rep(thisbar[1,1], length(pts[,1,1])), pts[,1,1], col=rgb(red=0, blue=0, g
 points(rep(thisbar[2,1], length(pts[,1,2])), pts[,1,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[1,2], length(pts[,2,1])), pts[,2,1], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[2,2], length(pts[,2,2])), pts[,2,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
+this.x <- grconvertX(0.05, from="nfc", to="user")
+this.y <- grconvertY(0.94,  from="nfc", to="user")
+text(labels='a', x=this.x, y=this.y, xpd=T, cex=2, font=2)
 
 # acc
 y  <- tapply(d$acc, list(d$difficulty, d$condition), mean, na.rm=T)
@@ -54,8 +57,11 @@ points(rep(thisbar[1,1], length(pts[,1,1])), pts[,1,1], col=rgb(red=0, blue=0, g
 points(rep(thisbar[2,1], length(pts[,1,2])), pts[,1,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[1,2], length(pts[,2,1])), pts[,2,1], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[2,2], length(pts[,2,2])), pts[,2,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
+this.x <- grconvertX(0.05, from="nfc", to="user")
+this.y <- grconvertY(0.94,  from="nfc", to="user")
+text(labels='b', x=this.x, y=this.y, xpd=T, cex=2, font=2)
 
-mtext('Per Block', side=3, line=-2, outer=T, font=2, cex = 1)
+# mtext('Per Block', side=3, line=-1.5, outer=T, font=2, cex = 2)
 
 # per trial
 # rt
@@ -81,6 +87,9 @@ points(rep(thisbar[1,1], length(pts[,1,1])), pts[,1,1], col=rgb(red=0, blue=0, g
 points(rep(thisbar[2,1], length(pts[,1,2])), pts[,1,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[1,2], length(pts[,2,1])), pts[,2,1], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[2,2], length(pts[,2,2])), pts[,2,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
+this.x <- grconvertX(0.05, from="nfc", to="user")
+this.y <- grconvertY(0.94,  from="nfc", to="user")
+text(labels='c', x=this.x, y=this.y, xpd=T, cex=2, font=2)
 
 # acc
 y  <- tapply(d$acc, list(d$switch, d$condition), mean, na.rm=T)
@@ -102,8 +111,11 @@ points(rep(thisbar[1,1], length(pts[,1,1])), pts[,1,1], col=rgb(red=0, blue=0, g
 points(rep(thisbar[2,1], length(pts[,1,2])), pts[,1,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[1,2], length(pts[,2,1])), pts[,2,1], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
 points(rep(thisbar[2,2], length(pts[,2,2])), pts[,2,2], col=rgb(red=0, blue=0, green=0, alpha = 0.1))
+this.x <- grconvertX(0.05, from="nfc", to="user")
+this.y <- grconvertY(0.94,  from="nfc", to="user")
+text(labels='d', x=this.x, y=this.y, xpd=T, cex=2, font=2)
 
-mtext('Per Trial', line=-21, outer=T, font=2, cex = 1)
+# mtext('Per Trial', line=-21, outer=T, font=2, cex = 2)
 
 dev.off()
 
