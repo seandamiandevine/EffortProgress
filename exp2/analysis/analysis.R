@@ -5,11 +5,9 @@ library(sjPlot)
 rm(list=ls()) # clear all
 
 # Load + clean ####
-dira = '~/Desktop/Ongoing/EffortProg/Exp2/analysis/a/'
-dirb = '~/Desktop/Ongoing/EffortProg/Exp2/analysis/b/'
-setwd(dirb) # set depending on experiment (a or b)
-files = list.files(path = 'data/', pattern = '.csv')
-d <- do.call("rbind", lapply(paste0('data/',files) , read.csv))
+thisexp <- 'b'
+files = list.files(path = paste0(thisexp, '/data/'), pattern = '.csv')
+d <- do.call("rbind", lapply(paste0(thisexp, '/data/',files) , read.csv))
 
 # * Clean and compute useful variables ####
 d <- 
@@ -68,7 +66,9 @@ m0.rt.t <- lmer(corrt ~ 1 + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m1.rt.t <- lmer(corrt ~ switch + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m2.rt.t <- lmer(corrt ~ switch+isprog + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m3.rt.t <- lmer(corrt ~ switch*isprog + (1|decisionnum) + (1|id), data=manipdat, REML = F)
-anova(m0.rt.t, m1.rt.t, m2.rt.t, m3.rt.t)
+m4.rt.t <- lmer(corrt ~ 0 + switch*efflevel + (1|decisionnum) + (1|id), data=manipdat, REML = F)
+anova(m0.rt.t, m1.rt.t, m2.rt.t, m3.rt.t, m4.rt.t)
+anova(m1.rt.t, m4.rt.t)
 
 m0.acc.t <- glmer(acc ~ 1 + (1|decisionnum) + (1|id), data=manipdat, family='binomial')
 m1.acc.t <- glmer(acc ~ switch + (1|decisionnum) + (1|id), data=manipdat, family='binomial')
@@ -90,12 +90,12 @@ m3.acc.b <- glmer(acc ~ isprog*efflevel + (1|id), data=manipdat, family='binomia
 anova(m0.acc.b, m1.acc.b, m2.acc.b, m3.acc.b)
 
 # Make HTML Table for Switch Costs 
-tab_model(m2.rt, m2.acc,
-          pred.labels = c('Intercept', 'Trial Type', 'Progress Cond.', 'Trial Type x Progress Cond.'),
-          dv.labels = c('Correct RT', 'Accuracy'),
-          show.icc = F, show.re.var = F,
-          show.stat = T, string.stat = 'z',
-          string.ci = '95% CI', file='figures/full/switchcosttable.html')
+# tab_model(m2.rt, m2.acc,
+#           pred.labels = c('Intercept', 'Trial Type', 'Progress Cond.', 'Trial Type x Progress Cond.'),
+#           dv.labels = c('Correct RT', 'Accuracy'),
+#           show.icc = F, show.re.var = F,
+#           show.stat = T, string.stat = 'z',
+#           string.ci = '95% CI', file='figures/full/switchcosttable.html')
 
 # * TLX ####
 tlx <- d %>% 
@@ -177,14 +177,17 @@ anova(h2.0, h2.1)
 h3.0 <- glmer(effchoice ~ 1 + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
 h3.1 <- glmer(effchoice ~ 0 + effort_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
 h3.2 <- glmer(effchoice ~ 0 + effort_type+prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
-h3.3 <- glmer(effchoice ~ effort_type*prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
+h3.3 <- glmer(effchoice ~ 0 + effort_type:prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
 
 anova(h3.0, h3.1)
 anova(h3.0, h3.2)
 anova(h3.2, h3.3)
 
 # * Reg. Table ####
-tab_model(h1.h3_main_m2, h2.1, 
+tablelabs = c('A vs. B', 'A vs. C', 'B vs. C', 'D vs. E', 'D vs. F', 'E vs. F', # h1 
+              'A vs. D', 'B vs. E', 'C vs. F',                                  # h2 
+              'A vs. E', 'A vs. F', 'B vs. F', 'B vs. D', 'C vs. D', 'C vs. E') # h3
+tab_model(h1.2, h2.1, h3.3, 
           pred.labels = tablelabs, 
           dv.labels = c('Effort Choice', 'Progress Choice'), 
           string.pred = 'Deck Pairing', 
