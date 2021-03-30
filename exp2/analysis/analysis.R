@@ -5,7 +5,7 @@ library(sjPlot)
 rm(list=ls()) # clear all
 
 # Load + clean ####
-thisexp <- 'b'
+thisexp <- 'a'
 files = list.files(path = paste0(thisexp, '/data/'), pattern = '.csv')
 d <- do.call("rbind", lapply(paste0(thisexp, '/data/',files) , read.csv))
 
@@ -143,51 +143,32 @@ fit_data <-
                             ifelse(match(as.numeric(substr(pair, 1, 1)) %% 3, 1:6 %% 3) > 
                                    match(as.numeric(substr(pair, 3, 3)) %% 3, 1:6 %% 3), '10','01')),  
          chosendeck = ifelse(deckchoice==76, deckl, deckr), 
-         progchoice = ifelse(chosendeck %in% 1:3, 0, 1)) %>% 
+         progchoice = ifelse(!effort_type %in% c('11', '22', '33'), NA, ifelse(chosendeck %in% 1:3, 0, 1)), 
+         progchoice_all = ifelse(chosendeck %in% 1:3, 0, 1)) %>% 
   select(id, decisionnum, deckl, deckr, pair, deckchoice, effort_type, prog_type,
-         effchoice, progchoice)
+         effchoice, progchoice, progchoice_all)
 
 fit_data$effort_type = factor(fit_data$effort_type)
 
-# * * H1 AND H3 at once
-# most complex causes convergence: try different optimizers, use best one
-# af = allFit(h1.h3_main_m3)
-# h1.h3_main_m0 <- glmer(effchoice ~ 1 + (1|id), data=fit_data, family = 'binomial')
-# h1.h3_main_m1 <- glmer(effchoice ~ 0 + effort_type + (1|id), data=fit_data, family = 'binomial')
-# #h1.h3_main_m2 <- glmer(effchoice ~ 0 + effort_type+prog_type + (1|id), data=fit_data, family = 'binomial')
-# h1.h3_main_m2 <- glmer(effchoice ~ 0 + effort_type:prog_type + (1|id), data=fit_data, family = 'binomial', glmerControl(optimizer = 'bobyqa'))
-# anova(h1.h3_main_m0, h1.h3_main_m1)
-# anova(h1.h3_main_m0, h1.h3_main_m2)
+# * * Demand Preference ####
+demand.m0 <- glmer(effchoice ~ 1 + (1|id), data=fit_data, family='binomial')
+demand.m1 <- glmer(effchoice ~ 0 + effort_type + (1|id), data=fit_data, family='binomial')
+demand.m2 <- glmer(effchoice ~ 0 + prog_type + (1|id), data=fit_data, family='binomial')
+demand.m3 <- glmer(effchoice ~ 0 + effort_type:prog_type + (1|id), data=fit_data, family='binomial')
+anova(demand.m0, demand.m1, demand.m2, demand.m3)
+anova(demand.m0, demand.m2)
 
-# * * H1 ####
-h1.0 <- glmer(effchoice ~ 1 + (1|id), data=fit_data[fit_data$prog_type %in% c('00', '11'), ], family = 'binomial')
-h1.1 <- glmer(effchoice ~ 0 + effort_type + (1|id), data=fit_data[fit_data$prog_type %in% c('00', '11'), ], family = 'binomial')
-h1.2 <- glmer(effchoice ~ 0 + effort_type:prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('00', '11'), ], family = 'binomial', glmerControl(optimizer = 'bobyqa'))
-
-anova(h1.0, h1.1)
-anova(h1.1, h1.2)
-
-# * * H2 ####
-h2.0 <- glmer(progchoice ~ 1 + (1|id), family = 'binomial', data=fit_data[is.na(fit_data$effchoice), ])
-h2.1 <- glmer(progchoice ~ 0+effort_type + (1|id), family = 'binomial', data=fit_data[is.na(fit_data$effchoice), ])
-
-anova(h2.0, h2.1)
-
-# * * H3 ####
-h3.0 <- glmer(effchoice ~ 1 + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
-h3.1 <- glmer(effchoice ~ 0 + effort_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
-h3.2 <- glmer(effchoice ~ 0 + effort_type+prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
-h3.3 <- glmer(effchoice ~ 0 + effort_type:prog_type + (1|id), data=fit_data[fit_data$prog_type %in% c('01', '10'), ], family = 'binomial')
-
-anova(h3.0, h3.1)
-anova(h3.0, h3.2)
-anova(h3.2, h3.3)
+# * * Progress Preference ####
+progress.m0_all <- glmer(progchoice_all ~ 1 + (1|id), data=fit_data, family='binomial')
+progress.m0 <- glmer(progchoice ~ 1 + (1|id), data=fit_data, family='binomial')
+progress.m1 <- glmer(progchoice ~ 0 + effort_type + (1|id), data=fit_data, family='binomial')
+anova(progress.m0, progress.m1)
 
 # * Reg. Table ####
-tablelabs = c('A vs. B', 'A vs. C', 'B vs. C', 'D vs. E', 'D vs. F', 'E vs. F', # h1 
-              'A vs. D', 'B vs. E', 'C vs. F',                                  # h2 
-              'A vs. E', 'A vs. F', 'B vs. F', 'B vs. D', 'C vs. D', 'C vs. E') # h3
-tab_model(h1.2, h2.1, h3.3, 
+tablelabs = c('A vs. B', 'A vs. C', 'B vs. C', 'A vs. E', 'A vs. F', 'B vs. F', 
+              'B vs. D', 'C vs. D', 'C vs. E', 'D vs. E', 'D vs. F', 'E vs. F',
+              'A vs. D', 'B vs. E', 'C vs. F')
+tab_model(demand.m3, progress.m1, 
           pred.labels = tablelabs, 
           dv.labels = c('Effort Choice', 'Progress Choice'), 
           string.pred = 'Deck Pairing', 
