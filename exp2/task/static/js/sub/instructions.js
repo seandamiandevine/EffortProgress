@@ -52,6 +52,23 @@ if(lengthfixed) {
   var lengthinst = "<p>Sometimes the game will be longer and sometimes it will be shorter. This has <b>nothing to do with the decks</b> and happens randomly.</p>"
 };
 
+if(nonprogbar) {
+  var barinst =
+   "<p>One last thing, above all of the decks there will be a <b>progress bar</b> during the color/number game. You can see an example of this below.</p>"+
+    '<img src="static/images/progressinst.png" style="float:center;" width="20%" height="20%"/>' +
+    '<br><br>' +
+    "<p>In some of the decks, this progress bar will gradually fill up with green every time you make a response.<br>In these cases, when the bar is all filled up, you'll be finished the game in that deck.</p>" +
+    "<p>In other decks, this progress bar will change <b>randomly</b> every time you make response.<br>In these cases, the amount of green in the progress bar <b>is unrelated</b> to where you're at in the game in that deck."+
+    "<br>In other words, regardless of how much green is in the bar, the game in that deck could end at any point.</p>"+
+    "<p>In both cases, the rules of the game stay them same.</p>"
+  } else {
+  var barinst =
+  "<p>One last thing, some of the decks will make a <b>progress bar</b> appear during the color/number game. You can see an example of this below.</p>"+
+  '<img src="static/images/progressinst.png" style="float:center;" width="20%" height="20%"/>' +
+  '<br><br>' +
+  "<p>When this happens, the rules to the game are the same, but everytime you make a response, the progress bar will fill up with green. When it is all filled up, you'll be finished the game in that deck.</p>"
+}
+
 var i4 = {
     type: 'instructions',
     pages: [
@@ -83,10 +100,7 @@ var i4 = {
   "<p>Again, your job for now is just to learn how the game changes depending on the deck.</p>" +
   "<p>Click NEXT to continue.</p>",
 
-  "<p>One last thing, some of the decks will make a <b>progress bar</b> appear during the color/number game. You can see an example of this below.</p>"+
-  '<img src="static/images/progressinst.png" style="float:center;" width="20%" height="20%"/>' +
-  '<br><br>' +
-  "<p>When this happens, the rules to the game are the same, but everytime you make a response, the progress bar will fill up with green. When it is all filled up, you'll be finished the game in that deck.</p>",
+  barinst,
 
   "<p>This is enough explaining for now. If you do not understand the instructions, use the PREVIOUS button below to go back.</p>"+
   "<p>When you click NEXT below, you will start playing the games as if you chose each of the decks.</p>" +

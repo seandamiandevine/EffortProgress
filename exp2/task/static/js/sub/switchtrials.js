@@ -19,13 +19,13 @@ var switchtrial = {
   on_start: function() {
 
     if(isprogress == true) {
-
       document.querySelector('#jspsych-progressbar-container').style.display = 'inline-block'; // show progress bar
-
     } else {
-
-      document.querySelector('#jspsych-progressbar-container').style.display = 'none'; // show progress bar
-
+      if(nonprogbar == true ){
+        document.querySelector('#jspsych-progressbar-container').style.display = 'inline-block'; // show progress bar
+      } else {
+        document.querySelector('#jspsych-progressbar-container').style.display = 'none'; // show progress bar
+      }
     }
 
     document.body.style.backgroundImage = "url('/static/images/"+background_pattern+"')"
@@ -33,8 +33,13 @@ var switchtrial = {
 
   },
   on_finish: function(data) {
-
-    jsPsych.setProgressBar((subtrial+1)/colList.length); // shows up here for the momentary full progress bar view
+    if(isprogress == false && nonprogbar == true) {
+      trialArray = Array.from(Array(colList.length).keys());
+      ranVal = _.sample(trialArray);
+      jsPsych.setProgressBar(ranVal/colList.length);       // just noise
+    } else {
+      jsPsych.setProgressBar((subtrial+1)/colList.length); // shows up here for the momentary full progress bar view
+    }
 
     // compute and store data
     if(colList[subtrial] == numcolors[0]) {

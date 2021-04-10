@@ -30,6 +30,7 @@ const pairsperrun = 2;                 // number of time pairs are presented per
 const iti = 500;                       // time after response until next cue (in ms)
 const confirmtime = 500;               // time that deck choice confirmation appears for (in ms.)
 const lengthfixed = true;              // whether or not block lengths vary
+const nonprogbar = true;               // whether a "progress" bar shows up in the no progress decks
 //const choicetime = 3000              // time to choose deck before timeout (in ms.)
 //const learntime = 2000               // time for which a deck is displayed during the learning phase (in ms)
 const learnrep = 3;                    // number of times the same deck is shown during the learning phase
@@ -39,32 +40,29 @@ const choicekeys = ['l','r'];          // keys that subjects can use to make dec
 const trialkeys = ['e', 'i'];          // keys that subjects can use to make responses with during trials
 var nums2choose = [1,2,3,4,6,7,8,9];   // numbers to judge
 var numcolors = ['green', 'orange'];   // colors for rules
+var background_pattern = '';           // background patten to reflect deck choice
+var colList = [];                      // stores block-to-block color list
+var isprogress = false;                // boolean for whether or not to show progress bar
 
 // function to make switch trials list
 maketrials = function(switch_rate, n, col1, col2) {
   nt = n-1;
   nswitch = Math.round(switch_rate*nt);
   nrep = nt-nswitch;
-
   x = Array(nswitch).fill('switch');
   x = x.concat(Array(nrep).fill('repeat'));
   x = _.sample(x, nt); // shuffle everything up
   x = ['NA'].concat(x); // first trial is neither switch nor repeat
-
   colors = [];
   for (i in _.range(x.length)){
     if(x[i]=='NA'){
-
       colors= colors.concat( _.sample([col1, col2]));// first trial
-
     } else if(x[i]=='repeat') {
       colors= colors.concat(colors[i-1]);
-
     } else if(x[i] == 'switch') {
       if(colors[i-1]==col1){
         y = col2;
       } else {y = col1}
-
       colors = colors.concat(y);
     }
   }
@@ -73,27 +71,17 @@ maketrials = function(switch_rate, n, col1, col2) {
 
 // randomized deck order for one subject
 var deckList = [];
-
 for(i in _.range(numruns)) {
-
-    var onerun = _.shuffle(pairs)
-
+    var onerun = _.shuffle(pairs);
     var counterrun = []; // same decklist, but pairings on opposite sides
-
- if(pairsperrun % 2 == 0) {
-
-   for(p in onerun) {
-
-   reversepair = [onerun[p][1], onerun[p][0]]
-   counterrun.push(reversepair)
-
-   }
-
+    if(pairsperrun % 2 == 0) {
+     for(p in onerun) {
+     reversepair = [onerun[p][1], onerun[p][0]];
+     counterrun.push(reversepair);
+     }
  }
-
- counterrun = _.shuffle(counterrun)
- deckList.push(onerun, counterrun)
-
+ counterrun = _.shuffle(counterrun);
+ deckList.push(onerun, counterrun);
 };
 
 deckList = _.shuffle(deckList.flat());
@@ -104,11 +92,6 @@ if(lengthfixed) {
 } else {
   var numtrials  = _.sample(blockLengths);          // variable block lengths for switch task
 };
-
-
-var background_pattern = ''; // background patten to reflect deck choice
-var colList = [];            // stores block-to-block color list
-var isprogress = false       // boolean for whether or not to show progress bar
 
 var fs = {
 	type: 'fullscreen',        // setup fullscreen mode
