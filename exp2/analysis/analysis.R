@@ -5,8 +5,34 @@ library(sjPlot)
 rm(list=ls()) # clear all
 
 # Load + clean ####
-thisexp <- 'a'
-files = list.files(path = paste0(thisexp, '/data/'), pattern = '.csv')
+filesa = list.files(path = 'a/data/', pattern = '.csv')
+filesb = list.files(path = 'b/data/', pattern = '.csv')
+filesc = list.files(path = 'c/data/', pattern = '.csv')
+thisexp <- 'b'
+switch (thisexp,
+  'a' = {
+    files = list.files(path = 'a/data/', pattern = '.csv')
+  },
+  'b' = {
+    ida = sapply(1:length(filesa), function(x) strsplit(filesa, split = '_')[[x]][1])
+    idb = sapply(1:length(filesb), function(x) strsplit(filesb, split = '_')[[x]][1])
+    overlapid = idb[idb %in% ida]
+    files <- filesb
+    for(o in overlapid){
+      files <- files[!grepl(o, files)]
+    }
+  }, 
+  'c' = {
+    filesab = c(filesa, filesb)
+    idab = sapply(1:length(filesab), function(x) strsplit(filesab, split = '_')[[x]][1])
+    idc = sapply(1:length(filesc), function(x) strsplit(filesc, split = '_')[[x]][1])
+    overlapid = idc[idc %in% idab]
+    files <- filesc
+    for(o in overlapid){
+      files <- files[!grepl(o, files)]
+    }
+  }
+  )
 d <- do.call("rbind", lapply(paste0(thisexp, '/data/',files) , read.csv))
 
 # * Clean and compute useful variables ####
@@ -61,14 +87,14 @@ manipdat <-
          efflevel = factor(match(as.numeric(chosendeck) %% 3, 1:6 %% 3))) %>% 
   filter(!is.na(switch))
 
-#trial
+# trial
 m0.rt.t <- lmer(corrt ~ 1 + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m1.rt.t <- lmer(corrt ~ switch + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m2.rt.t <- lmer(corrt ~ switch+isprog + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m3.rt.t <- lmer(corrt ~ switch*isprog + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 m4.rt.t <- lmer(corrt ~ 0 + switch*efflevel + (1|decisionnum) + (1|id), data=manipdat, REML = F)
 anova(m0.rt.t, m1.rt.t, m2.rt.t, m3.rt.t, m4.rt.t)
-anova(m1.rt.t, m4.rt.t)
+anova(m2.rt.t, m4.rt.t)
 
 m0.acc.t <- glmer(acc ~ 1 + (1|decisionnum) + (1|id), data=manipdat, family='binomial')
 m1.acc.t <- glmer(acc ~ switch + (1|decisionnum) + (1|id), data=manipdat, family='binomial')
@@ -176,3 +202,5 @@ tab_model(demand.m3, progress.m1,
           show.stat = T, string.stat = 'z', 
           string.ci = '95% CI')
           #file = 'figures/full/MLMtable.html') 
+
+save.image(paste0('effprog2',thisexp, '.RData'))
